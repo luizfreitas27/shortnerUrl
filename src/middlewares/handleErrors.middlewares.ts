@@ -10,15 +10,7 @@ export class HandleErrorsMiddleware {
     }
 
     if (err instanceof ZodError) {
-      const formattedErrors = err.errors.map((e) => ({
-        path: e.path.join("."),
-        message: e.message,
-      }));
-
-      return res.status(400).json({
-        message: "Validation error",
-        errors: formattedErrors,
-      });
+      return res.status(400).json({ errors: err.errors });
     }
 
     if (err instanceof JsonWebTokenError) {

@@ -1,12 +1,15 @@
+import { injectable } from "tsyringe";
 import { prisma } from "../database/prisma";
 import {
   UserCreateSchema,
-  userResponseSchema,
+  UserResponseLoginSchema,
+  userCreateResponseSchema,
   UserResponseSchema,
   UserSchema,
 } from "../schemas/users.shemas";
 import bcrypt from "bcrypt";
 
+@injectable()
 export class UserService {
   public registerUser = async (
     payload: UserCreateSchema
@@ -20,6 +23,10 @@ export class UserService {
 
     const response = await prisma.user.create({ data: newUser });
 
-    return userResponseSchema.parse(response);
+    return userCreateResponseSchema.parse(response);
+  };
+
+  public loginUser = async (payload: UserResponseLoginSchema) => {
+    return payload;
   };
 }

@@ -9,18 +9,42 @@ export const userSchema = z.object({
   updatedAt: z.string().datetime(),
 });
 
+export const userLoginValidSchema = z.object({
+  email: z.string().email(),
+  password: z.string().nonempty(),
+});
+
 export const userCreateSchema = userSchema.omit({
   id: true,
   createdAt: true,
   updatedAt: true,
 });
 
-export const userResponseSchema = userSchema.omit({
+export const userCreateResponseSchema = userSchema.omit({
+  id: true,
   password: true,
   createdAt: true,
   updatedAt: true,
 });
 
+export const userLoginSchema = userSchema.omit({
+  id: true,
+  password: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const userResponseLoginSchema = z.object({
+  user: userSchema.omit({
+    password: true,
+    createdAt: true,
+    updatedAt: true,
+  }),
+  token: z.string().nonempty(),
+});
+
+export type UserLoginValidSchema = z.infer<typeof userLoginValidSchema>;
+export type UserResponseLoginSchema = z.infer<typeof userResponseLoginSchema>;
 export type UserSchema = z.infer<typeof userSchema>;
 export type UserCreateSchema = z.infer<typeof userCreateSchema>;
-export type UserResponseSchema = z.infer<typeof userResponseSchema>;
+export type UserResponseSchema = z.infer<typeof userCreateResponseSchema>;
