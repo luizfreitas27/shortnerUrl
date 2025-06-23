@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { AppError } from "../errors/appError";
 import { ZodError } from "zod";
-import { JsonWebTokenError } from "jsonwebtoken";
+import { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
 
 export class HandleErrorsMiddleware {
   static execute(err: Error, req: Request, res: Response, next: NextFunction) {
@@ -16,6 +16,10 @@ export class HandleErrorsMiddleware {
     if (err instanceof JsonWebTokenError) {
       return res.status(401).json({ message: err.message });
     }
+
+    // if (err instanceof TokenExpiredError) {
+    //   return res.status(401).json({ message: err.message });
+    // }
 
     return res.status(500).json({ message: "Internal Server Error" });
   }

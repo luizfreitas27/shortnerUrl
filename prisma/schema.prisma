@@ -15,10 +15,34 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  username  String
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           Int           @id @default(autoincrement())
+  email        String        @unique
+  username     String
+  password     String
+  role         Role          @default(USER)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  shortnerUrls ShortnerUrl[]
+
+  @@map("users_table")
+}
+
+model ShortnerUrl {
+  id          Int      @id @default(autoincrement())
+  originalUrl String
+  shortnerUrl String   @unique
+  code        String   @unique
+  count       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@unique([originalUrl, userId])
+  @@map("shortnerUrl_table")
+}
+
+enum Role {
+  USER
+  ADMIN
 }

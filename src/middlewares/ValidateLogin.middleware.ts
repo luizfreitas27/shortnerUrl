@@ -22,14 +22,14 @@ export class ValidateLogin {
     }
 
     const accessToken = jwt.sign(
-      { id: user.id },
+      { id: user.id, email: user.email, role: user.role },
       process.env.JWT_SECRET as string,
-      { expiresIn: "1h" }
+      { expiresIn: "1h", subject: String(user.id) }
     );
 
-    res.locals.userLoginResult = {
+    res.locals.decodedToken = {
       user: userLoginSchema.parse(user),
-      token: accessToken,
+      token: `Bearer ${accessToken}`,
     };
 
     next();
