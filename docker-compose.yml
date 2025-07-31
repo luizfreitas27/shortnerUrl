@@ -1,18 +1,30 @@
-version: "3.8"
+version: "3.9"
 
 services:
-  postgres:
+  db:
     image: postgres:latest
-    container_name: shortner_db
     restart: always
-    ports:
-      - "5432:5432"
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-      POSTGRES_DB: shortner_db
+      POSTGRES_DB: shortner
+    ports:
+      - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: .
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_URL: postgres://admin:admin@db:5432/shortner
+    depends_on:
+      - db
 
 volumes:
-  postgres_data:
+  pgdata:
